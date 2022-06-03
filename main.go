@@ -6,12 +6,13 @@ import (
 	"fmt"
 	"github.com/merci-app/oauth-sample-api-golang/client"
 	"net/http"
+	"sync"
 	"time"
 )
 
 var (
-	username = "<USERNAME>"
-	password = "<PASSWORD>"
+	username = "71nrr9g704auojjhii5pe4jel7"
+	password = "53871i0dmq0i08o96kb3csvf40dsn9i8thfd4saur2cpgg8bgmq"
 )
 
 func main() {
@@ -21,6 +22,31 @@ func main() {
 		panic(err.Error())
 	}
 
+	// Result is a new token with full expiration time
+	fmt.Println(caradhras.GetAccessToken())
+	fmt.Println(caradhras.GetExpireIn().Format(time.RFC3339))
+
+	err = caradhras.Authenticate()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	// Result is the same token with smaller expiration time
+	fmt.Println(caradhras.GetAccessToken())
+	fmt.Println(caradhras.GetExpireIn().Format(time.RFC3339))
+
+	caradhras.ExpireAccessToken()
+
+	// Result is no token
+	fmt.Println(caradhras.GetAccessToken())
+	fmt.Println(caradhras.GetExpireIn().Format(time.RFC3339))
+
+	err = caradhras.Authenticate()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	// Result is a new token with full expiration time
 	fmt.Println(caradhras.GetAccessToken())
 	fmt.Println(caradhras.GetExpireIn().Format(time.RFC3339))
 }
@@ -36,8 +62,8 @@ func (a *Authorization) Authenticate() error {
 	a.lock.Lock()
 	defer a.lock.Unlock()
 
-	valid := time.Now().Before(a.expiresIn)
-	if !valid {
+	expired := time.Now().After(a.expiresIn)
+	if expired {
 		oauth, err := a.oauth()
 		if err != nil {
 			return err
@@ -48,16 +74,16 @@ func (a *Authorization) Authenticate() error {
 	return nil
 }
 
-func (a *Authorization) oauth() (authResponse, error) {
+func (a *Authorization) oauth() (oauthResponse, error) {
 
-	var response authResponse
+	var response oauthResponse
 	url := "https://auth.hml.caradhras.io/oauth2/token?grant_type=client_credentials"
 	basicAuth := base64.StdEncoding.EncodeToString([]byte(a.username + ":" + a.password))
 
 	req := client.NewClient()
 	resp, _, err := req.Post(url).
 		Set("Content-Type", "applicaion/x-www-form-urlencoded").
-		Set("Authorizaion", "Basic "+basicAuth).
+		Set("Authorization", "Basic "+basicAuth).
 		Do(&response)
 
 	if err != nil {
@@ -70,10 +96,29 @@ func (a *Authorization) oauth() (authResponse, error) {
 	return response, nil
 }
 
+func (a *Authorization) ExpireAccessToken() {
+	a.accessToken = ""
+	a.expiresIn = time.Time{}
+}
+
 func (a *Authorization) GetExpireIn() time.Time {
 	return a.expiresIn
 }
 
 func (a *Authorization) GetAccessToken() string {
 	return a.accessToken
+}
+
+type Authorization struct {
+	username    string
+	password    string
+	accessToken string
+	expiresIn   time.Time
+	lock        sync.Mutex
+}
+
+type oauthResponse struct {
+	AccessToken string `json:"access_token"`
+	ExpiresIn   int    `json:"expires_in"`
+	Error       string `json:"error"`
 }
