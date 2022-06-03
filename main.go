@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	username = "71nrr9g704auojjhii5pe4jel7"
-	password = "53871i0dmq0i08o96kb3csvf40dsn9i8thfd4saur2cpgg8bgmq"
+	username = "username"
+	password = "password"
 )
 
 func main() {

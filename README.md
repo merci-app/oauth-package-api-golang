@@ -22,8 +22,18 @@
 
 ```
 $ git clone https://github.com/merci-app/oauth-sample-api-golang
-$ cd go
 ```
+
+### Configuring
+
+Set this global variables
+```go
+var (
+    username = "username"
+    password = "password"
+)
+```
+
 
 ### Executing program
 
