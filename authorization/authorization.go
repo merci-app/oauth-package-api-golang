@@ -22,19 +22,19 @@ func NewAuthorization(username, password string) *Authorization {
 	}
 }
 
-func (a *Authorization) Authenticate() error {
+func (a *Authorization) GetAccessToken() (string, error) {
 	a.lock.Lock()
 	defer a.lock.Unlock()
 
 	if a.IsExpired() {
 		oauth, err := a.oauth()
 		if err != nil {
-			return err
+			return "", err
 		}
 		a.accessToken = oauth.AccessToken
 		a.expiresIn = time.Now().Add(time.Duration(oauth.ExpiresIn-10) * time.Second)
 	}
-	return nil
+	return a.accessToken, nil
 }
 
 func (a *Authorization) oauth() (oauthResponse, error) {
@@ -76,10 +76,6 @@ func (a *Authorization) IsExpired() bool {
 
 func (a *Authorization) ExpireAccessToken() {
 	a.expiresIn = time.Time{}
-}
-
-func (a *Authorization) GetAccessToken() string {
-	return a.accessToken
 }
 
 type ClientHTTPInterface interface {

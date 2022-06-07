@@ -95,18 +95,15 @@ func Test_Authenticate(t *testing.T) {
 			caradhras := NewAuthorization("", "")
 			ClientHttp = &tc.client
 			AuthURL = tc.authUrl
-			err := caradhras.Authenticate()
+			token, err := caradhras.GetAccessToken()
 			if tc.err != "" {
 				assert.Equal(t, err.Error(), tc.err)
 			} else {
-				assert.Equal(t, err, nil)
-
-				token := caradhras.GetAccessToken()
+				assert.Nil(t, err)
 				assert.Equal(t, token, "123")
 				assert.Equal(t, caradhras.IsExpired(), false)
 
 				caradhras.ExpireAccessToken()
-				caradhras.GetAccessToken()
 				assert.Equal(t, caradhras.IsExpired(), true)
 			}
 		})

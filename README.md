@@ -4,7 +4,11 @@
 
 ## Description
 
-...
+This code sample demonstrates how to implement OAuth 2.0 authorization in Caradhras API. This code sample shows you how to accomplish the following tasks:
+
+* Implement OAuth 2.0 authentication
+* Decode json response
+* Token expiration control in memory
 
 ## Getting Started
 
