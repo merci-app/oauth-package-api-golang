@@ -42,6 +42,7 @@ var (
 ### Executing program
 
 ```
+cd cmd
 $ go run main.go
 ```
 
