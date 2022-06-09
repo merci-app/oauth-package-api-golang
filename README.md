@@ -1,14 +1,12 @@
 # oauth-sample-api-golang
 
-...
+To facilitate integration with the Dock's Caradhras API, a series of code examples were developed considering best practices and the best way to manage the data returned by the endpoints. So feel free to use this code example as you see fit.
 
 ## Description
 
-This code sample demonstrates how to implement OAuth 2.0 authorization in Caradhras API. This code sample shows you how to accomplish the following tasks:
+This code example demonstrates how to implement oauth 2.0 authorization considering the use of caching to not make unnecessary extra calls.
 
-* Implement OAuth 2.0 authentication
-* Decode json response
-* Token expiration control in memory
+To make this possible, we use the field returned with the expiration time information. Every time we use the token, we check if the expiration time has passed and perform a new authentication only if necessary.
 
 ## Getting Started
 
@@ -46,13 +44,9 @@ cd cmd
 $ go run main.go
 ```
 
-## Help
-
-...
-
 ## Authors
 
-...
+- Experiences team
 
 ## Version History
 
