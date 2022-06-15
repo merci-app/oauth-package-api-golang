@@ -48,7 +48,6 @@ $ go run main.go
 
 - Experiences team
 
-## Version History
+## License
 
-* 0.1
-    * Initial Release
+[![License](https://img.shields.io/badge/License-Apache_2.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)  
