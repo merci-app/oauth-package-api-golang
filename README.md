@@ -1,4 +1,4 @@
-# oauth-sample-api-golang
+# oauth-package-api-golang
 
 To facilitate integration with the Dock's Caradhras API, a series of code examples were developed considering best practices and the best way to manage the data returned by the endpoints. So feel free to use this code example as you see fit.
 
